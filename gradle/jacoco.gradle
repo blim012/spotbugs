@@ -2,11 +2,14 @@ apply plugin: "jacoco"
 
 jacoco {
   toolVersion = "0.8.5"
+  reportsDir = file("$buildDir/jacocoHtml")
 }
 
 jacocoTestReport {
   reports {
     html.enabled = true
+    //export
+    html.destination file("buildDir/jacocoHtml") //remove buildDir?
   }
 }
 
