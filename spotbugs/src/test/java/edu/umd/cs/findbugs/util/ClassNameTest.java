@@ -21,6 +21,8 @@ package edu.umd.cs.findbugs.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -41,9 +43,9 @@ public class ClassNameTest {
     @Test
     public void testExtractClassName() {
         assertEquals("java/lang/Integer", ClassName.extractClassName("Ljava/lang/Integer;"));
+        assertEquals("java/lang/Integer", ClassName.extractClassName("[java/lang/Integer"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("[Ljava/lang/Integer;"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("[[Ljava/lang/Integer;"));
-        assertEquals("java/lang/Integer", ClassName.extractClassName("[[[Ljava/lang/Integer;"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("java/lang/Integer"));
     }
 
@@ -64,5 +66,22 @@ public class ClassNameTest {
     @Test(expected = IllegalArgumentException.class)
     public void testExtractClassNameBad() {
         ClassName.extractClassName("L[Ljava/lang/Integer;");
+    }
+
+    @Test
+    public void testIsLocalOrAnonymous()
+    {
+	assertFalse(ClassName.isLocalOrAnonymous("java/lang/Integer"));
+	assertFalse(ClassName.isLocalOrAnonymous("java/lang/Integer$"));
+	assertTrue(ClassName.isLocalOrAnonymous("java/lang/Integer$1"));
+    }
+
+    @Test
+    public void testIsAnonymous()
+    {
+	assertFalse(ClassName.isAnonymous("java/lang/Integer"));
+	assertFalse(ClassName.isAnonymous("java/lang/Integer$"));
+	assertFalse(ClassName.isAnonymous("java/lang/Integer$byte"));
+	assertTrue(ClassName.isAnonymous("java/lang/Integer$1"));
     }
 }

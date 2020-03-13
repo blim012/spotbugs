@@ -29,7 +29,7 @@ import org.junit.Test;
 
 public class GetNumberArgumentsTest {
 
-    static String[] simpleTypes = "I J B C D F I S Z".split(" ");
+    static String[] simpleTypes = "I J B C D F S Z Ljava/lang/String;".split(" ");
 
     @Test
     public void testSimpleWithVoidReturnType() {
@@ -39,30 +39,14 @@ public class GetNumberArgumentsTest {
     }
 
     @Test
-    public void testSimpleWithVoidIntegerType() {
-        for (String s : simpleTypes) {
-            assertEquals(1, PreorderVisitor.getNumberArguments("(" + s + ")I"));
-        }
-    }
-
-    @Test
     public void testArrays() {
-        for (String s : simpleTypes) {
-            assertEquals(1, PreorderVisitor.getNumberArguments("([" + s + ")V"));
-            assertEquals(1, PreorderVisitor.getNumberArguments("([[" + s + ")I"));
-        }
+	assertEquals(1, PreorderVisitor.getNumberArguments("([I)V"));
+	assertEquals(1, PreorderVisitor.getNumberArguments("([[Ljava/lang/String;)I"));        
     }
 
     @Test
-    public void testStringArguments() {
-        for (String s : simpleTypes) {
-            assertEquals(2, PreorderVisitor.getNumberArguments("([Ljava/lang/String;" + s + ")V"));
-            assertEquals(2, PreorderVisitor.getNumberArguments("([[" + s + "Ljava/lang/String;)I"));
-        }
-    }
-
-    @Test
-    public void testSimpleObjectArgument() {
-        assertEquals(1, PreorderVisitor.getNumberArguments("(Ledu/umd/cs/findbugs/ba/ClassContext;)V"));
+    public void testMultipleArguments() {
+	assertEquals(2, PreorderVisitor.getNumberArguments("([Ljava/lang/String;S)V"));
+	assertEquals(2, PreorderVisitor.getNumberArguments("([[FLjava/lang/String;)I"));        
     }
 }

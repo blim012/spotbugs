@@ -30,7 +30,14 @@ public class TestClassDescriptor {
 
     @Test
     public void testSimpleName() {
-        ClassDescriptor p = DescriptorFactory.createClassDescriptor("com/bla/Parent");
+        ClassDescriptor s = DescriptorFactory.createClassDescriptor("com");
+	assertEquals("com", s.getClassName());
+	assertEquals("com", s.getDottedClassName());
+	assertEquals("Lcom;", s.getSignature());
+	assertEquals("", s.getPackageName());
+	assertEquals("com", s.getSimpleName());
+
+	ClassDescriptor p = DescriptorFactory.createClassDescriptor("com/bla/Parent");
         assertEquals("com/bla/Parent", p.getClassName());
         assertEquals("com.bla.Parent", p.getDottedClassName());
         assertEquals("Lcom/bla/Parent;", p.getSignature());
@@ -51,4 +58,65 @@ public class TestClassDescriptor {
         assertEquals("com.bla", a.getPackageName());
         assertEquals("1", a.getSimpleName());
     }
+
+    @Test
+    public void testInvalidName()
+    {
+	try
+	{
+	    ClassDescriptor a = new ClassDescriptor("com.bla.Parent");
+	}
+	catch(IllegalArgumentException e)
+	{
+	    assertEquals(e.getMessage(), "Class name com.bla.Parent not in VM format");
+	}
+
+	try
+	{
+	    ClassDescriptor a = DescriptorFactory.createClassDescriptor("com.bla.Parent");
+	}
+	catch(AssertionError e)
+	{
+	    assertEquals(e.getMessage(), null);
+	}
+
+	try
+	{
+	    ClassDescriptor b = new ClassDescriptor("(com/bla/Parent)");
+	}
+	catch(IllegalArgumentException e)
+	{
+	    assertEquals(e.getMessage(), "Invalid class name (com/bla/Parent)");
+	}
+
+	try
+	{
+	    ClassDescriptor b = DescriptorFactory.createClassDescriptor("(com/bla/Parent)");	
+	}
+	catch(IllegalArgumentException e)
+	{
+	    assertEquals(e.getMessage(), "Invalid class name (com/bla/Parent)");
+	}	
+    }
+
+    @Test
+    public void testShouldFail()
+    {
+	//Invalid class name is still able to pass through constructor checks
+	//as well as getClassDescriptor checks.
+
+	ClassDescriptor p = DescriptorFactory.createClassDescriptor("com/bla/$/$/$");
+	assertEquals("com/bla/$/$/$", p.getClassName());
+
+	//Class names cannot be empty, so this should not be accepted as well.
+	//A consequence of this is that if you attempt to getSignature on a 
+	//className that is an empty string, you get a StringIndexOutofBoundsException
+        ClassDescriptor e = DescriptorFactory.createClassDescriptor("");
+	assertEquals("", e.getClassName());
+	assertEquals("", e.getDottedClassName());
+        assertEquals("", e.getPackageName());
+        assertEquals("", e.getSimpleName());
+
+    }
+
 }

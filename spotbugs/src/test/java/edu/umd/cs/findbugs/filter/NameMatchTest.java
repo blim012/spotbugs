@@ -42,6 +42,7 @@ public class NameMatchTest {
         assertTrue(anyParamReturnVoid.match("(I)V"));
         assertTrue(anyParamReturnVoid.match("(Ljava/lang/String;)V"));
         assertFalse(anyParamReturnVoid.match("()J"));
+	assertTrue(anyParamReturnVoid.match("(1234567890)V")); //Pattern allows bad input
     }
 
     @Test
@@ -51,5 +52,15 @@ public class NameMatchTest {
         assertTrue(anyParamReturnVoid.match("()I"));
         assertTrue(anyParamReturnVoid.match("()Ljava/lang/String;"));
         assertFalse(anyParamReturnVoid.match("(B)J"));
+	assertTrue(anyParamReturnVoid.match("()1234567890")); //Pattern allows bad input
+    }
+
+    @Test
+    public void testAnyMatch()
+    {
+	NameMatch nullMatch = new NameMatch(SignatureUtil.createMethodSignature(null, null));
+	assertTrue(nullMatch.match(""));
+	assertTrue(nullMatch.match(null));
+	assertTrue(nullMatch.match("()V"));
     }
 }
