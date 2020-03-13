@@ -43,7 +43,6 @@ public class ClassNameTest {
     @Test
     public void testExtractClassName() {
         assertEquals("java/lang/Integer", ClassName.extractClassName("Ljava/lang/Integer;"));
-        assertEquals("java/lang/Integer", ClassName.extractClassName("[java/lang/Integer"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("[Ljava/lang/Integer;"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("[[Ljava/lang/Integer;"));
         assertEquals("java/lang/Integer", ClassName.extractClassName("java/lang/Integer"));
